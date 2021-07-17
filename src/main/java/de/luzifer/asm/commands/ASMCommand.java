@@ -29,7 +29,7 @@ public class ASMCommand implements CommandExecutor {
         if(!(sender instanceof Player)) {
 
             sender.sendMessage("I'm sorry, you can't do that.");
-            return false;
+            return true;
         }
 
         Player player = (Player) sender;
@@ -44,10 +44,10 @@ public class ASMCommand implements CommandExecutor {
                     for(SpawnTaskId taskId : user.getTaskIds())
                         player.sendMessage(ChatUtil.formatMessage("§7- §f" + taskId.getTaskId()));
 
-                    return false;
+                    return true;
                 }
                 sendHelpList(player);
-                return false;
+                return true;
             } else if(args.length == 2) {
                 if(args[0].equalsIgnoreCase("stop")) {
 
@@ -56,50 +56,50 @@ public class ASMCommand implements CommandExecutor {
                         taskId = Integer.parseInt(args[1]);
                     } catch (Exception e) {
                         player.sendMessage(ChatUtil.formatMessage("§7Please enter a valid TaskId."));
-                        return false;
+                        return true;
                     }
 
                     if(!user.getTaskIds().contains(SpawnTaskId.of(taskId))) {
                         player.sendMessage(ChatUtil.formatMessage("§7Couldn't find a Task with the id §f" + taskId));
-                        return false;
+                        return true;
                     }
 
                     Bukkit.getScheduler().cancelTask(taskId);
 
                     player.sendMessage(ChatUtil.formatMessage("§7Task stopped successfully. TaskId: §f" + taskId));
                     user.getTaskIds().remove(SpawnTaskId.of(taskId));
-                    return false;
+                    return true;
                 } else if(args[0].equalsIgnoreCase("spawn")) {
 
                     if(!assertEntityTypeExist(args[1])) {
                         user.asPlayer().sendMessage(ChatUtil.formatMessage("§7Couldn't find an EntityType named: §c" + args[1]));
-                        return false;
+                        return true;
                     }
 
                     spawnEntity(args[1], user, location);
                     player.sendMessage(ChatUtil.formatMessage("§7Spawned 1 " + args[1].toUpperCase()));
-                    return false;
+                    return true;
                 }
 
                 sendHelpList(player);
-                return false;
+                return true;
             } else if(args.length == 3) {
                 if(args[0].equalsIgnoreCase("spawn")) {
 
                     int amount = getAmount(args[2], user);
 
-                    if(amount == 0) return false;
+                    if(amount == 0) return true;
 
                     if(!assertEntityTypeExist(args[1])) {
                         user.asPlayer().sendMessage(ChatUtil.formatMessage("§7Couldn't find an EntityType named: §c" + args[1]));
-                        return false;
+                        return true;
                     }
 
                     if(amount == 1) {
 
                         spawnEntity(args[1], user, location);
                         player.sendMessage(ChatUtil.formatMessage("§7Spawned 1 " + args[1].toUpperCase()));
-                        return false;
+                        return true;
                     }
 
                     List<SpawnTaskData> spawnTaskDataList = new ArrayList<>();
@@ -112,12 +112,12 @@ public class ASMCommand implements CommandExecutor {
                     SpawnTask spawnTask = new SpawnTask(spawnTaskDataList, user);
                     spawnTask.start();
 
-                    return false;
+                    return true;
                 }
             }
             sendHelpList(player);
         }
-        return false;
+        return true;
     }
 
     private void sendHelpList(Player player) {
@@ -142,12 +142,12 @@ public class ASMCommand implements CommandExecutor {
 
     private boolean assertEntityTypeExist(String entityTypeName) {
 
-        if(entityTypeName == null) return false;
+        if(entityTypeName == null) return true;
 
         try {
             EntityType entityType = EntityType.valueOf(entityTypeName.toUpperCase(Locale.ENGLISH));
         } catch (Exception e) {
-            return false;
+            return true;
         }
         return true;
     }
