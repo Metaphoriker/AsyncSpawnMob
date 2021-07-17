@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class UserService {
+public interface UserService {
 
-    public static final List<User> users = new ArrayList<>();
+    List<User> users = new ArrayList<>();
 
-    public static User getOrCreateUser(UUID uuid) {
+    static User getOrCreateUser(UUID uuid) {
 
         for(User u : users) {
             if(u.uuid.equals(uuid)) return u;
@@ -19,7 +19,7 @@ public class UserService {
         return user;
     }
 
-    public static void removeUser(UUID uuid) {
+    static void removeUser(UUID uuid) {
         users.remove(getOrCreateUser(uuid));
     }
 
