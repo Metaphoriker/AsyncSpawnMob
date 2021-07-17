@@ -1,4 +1,4 @@
-# The delay between the monster spawns.
+# Sets the delay between the monster spawns.
 # NOTE: Those are ticks. A Spawning-Delay of 1 spawns the monsters of the current task every tick
 Spawning-Delay: 1
 
@@ -6,6 +6,10 @@ Spawning-Delay: 1
 # EXAMPLE: If you spawn 1000 monsters, 50 will be spawned every delay.
 # FORMULA: Amount/100*Spawn-Per-Tick
 Spawn-Per-Delay: 5
+
+# Sets the spawning reach
+# NOTE: The monsters will be spawned to where the player is looking to
+Spawning-Distance: 10
 
 # The needed permission to use the command
 Needed-Permission: "asm.use"

@@ -180,7 +180,7 @@ public class ASMCommand implements CommandExecutor {
 
     private Block getTargetBlock(Player player) {
 
-        BlockIterator iterator = new BlockIterator(player, 10);
+        BlockIterator iterator = new BlockIterator(player, Variables.spawningDistance);
         Block lastBlock = iterator.next();
         while (iterator.hasNext()) {
             lastBlock = iterator.next();
