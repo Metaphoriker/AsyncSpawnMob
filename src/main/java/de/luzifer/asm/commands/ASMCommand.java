@@ -38,95 +38,95 @@ public class ASMCommand implements CommandExecutor {
 
         if(command.getName().equalsIgnoreCase("asyncspawnmob")) {
 
-            if(!player.hasPermission(Variables.permission)) {
-
-                player.sendMessage(ChatUtil.formatMessage("§cYou don't have the permission to do that"));
+            if(!isPermitted(player)) {
+                player.sendMessage(ChatUtil.formatMessage("§cYou don't have the permission to do that."));
                 return true;
             }
 
             Location location = getTargetBlock(player).getLocation();
-            if(args.length == 1) {
-                if(args[0].equalsIgnoreCase("list")) {
 
-                    player.sendMessage(ChatUtil.formatMessage("§7You have §8[§a" + user.getTaskIds().size() + "§8] §7tasks running:"));
-                    for(SpawnTaskId taskId : user.getTaskIds())
-                        player.sendMessage(ChatUtil.formatMessage("§7- §f" + taskId.getTaskId()));
+            switch (args.length) {
+                case 1:
+                    if(args[0].equalsIgnoreCase("list")) {
 
-                    return true;
-                }
+                        player.sendMessage(ChatUtil.formatMessage("§7You have §8[§a" + user.getTaskIds().size() + "§8] §7tasks running:"));
+                        for(SpawnTaskId taskId : user.getTaskIds())
+                            player.sendMessage(ChatUtil.formatMessage("§7- §f" + taskId.getTaskId()));
 
-                sendHelpList(player);
-                return true;
-            } else if(args.length == 2) {
-                if(args[0].equalsIgnoreCase("stop")) {
-
-                    int taskId;
-                    try {
-                        taskId = Integer.parseInt(args[1]);
-                    } catch (Exception e) {
-                        player.sendMessage(ChatUtil.formatMessage("§7Please enter a valid TaskId."));
                         return true;
                     }
+                case 2:
+                    if(args[0].equalsIgnoreCase("stop")) {
 
-                    if(!user.getTaskIds().contains(SpawnTaskId.of(taskId))) {
-                        player.sendMessage(ChatUtil.formatMessage("§7Couldn't find a Task with the id §f" + taskId));
+                        int taskId;
+                        try {
+                            taskId = Integer.parseInt(args[1]);
+                        } catch (Exception e) {
+                            player.sendMessage(ChatUtil.formatMessage("§7Please enter a valid TaskId."));
+                            return true;
+                        }
+
+                        if(!user.getTaskIds().contains(SpawnTaskId.of(taskId))) {
+                            player.sendMessage(ChatUtil.formatMessage("§7Couldn't find a Task with the id §f" + taskId));
+                            return true;
+                        }
+
+                        Bukkit.getScheduler().cancelTask(taskId);
+
+                        player.sendMessage(ChatUtil.formatMessage("§7Task stopped successfully. TaskId: §f" + taskId));
+                        user.getTaskIds().remove(SpawnTaskId.of(taskId));
                         return true;
-                    }
+                    } else if(args[0].equalsIgnoreCase("spawn")) {
 
-                    Bukkit.getScheduler().cancelTask(taskId);
-
-                    player.sendMessage(ChatUtil.formatMessage("§7Task stopped successfully. TaskId: §f" + taskId));
-                    user.getTaskIds().remove(SpawnTaskId.of(taskId));
-                    return true;
-                } else if(args[0].equalsIgnoreCase("spawn")) {
-
-                    if(!assertEntityTypeExist(args[1])) {
-                        user.asPlayer().sendMessage(ChatUtil.formatMessage("§7Couldn't find an EntityType named: §c" + args[1]));
-                        return true;
-                    }
-
-                    spawnEntity(args[1], user, location);
-                    player.sendMessage(ChatUtil.formatMessage("§7Spawned 1 " + args[1].toUpperCase()));
-                    return true;
-                }
-
-                sendHelpList(player);
-                return true;
-            } else if(args.length == 3) {
-                if(args[0].equalsIgnoreCase("spawn")) {
-
-                    int amount = getAmount(args[2], user);
-
-                    if(amount == 0) return true;
-
-                    if(!assertEntityTypeExist(args[1])) {
-                        user.asPlayer().sendMessage(ChatUtil.formatMessage("§7Couldn't find an EntityType named: §c" + args[1]));
-                        return true;
-                    }
-
-                    if(amount == 1) {
+                        if(assertEntityTypeDoesNotExist(args[1])) {
+                            user.asPlayer().sendMessage(ChatUtil.formatMessage("§7Couldn't find an EntityType named: §c" + args[1]));
+                            return true;
+                        }
 
                         spawnEntity(args[1], user, location);
                         player.sendMessage(ChatUtil.formatMessage("§7Spawned 1 " + args[1].toUpperCase()));
                         return true;
                     }
+                case 3:
+                    if(args[0].equalsIgnoreCase("spawn")) {
 
-                    List<SpawnTaskData> spawnTaskDataList = new ArrayList<>();
-                    for(int i = 0; i < amount; i++) {
-                        spawnTaskDataList.add(new SpawnTaskData(args[1], location));
+                        int amount = getAmount(args[2], user);
+
+                        if(amount == 0) return true;
+
+                        if(assertEntityTypeDoesNotExist(args[1])) {
+                            user.asPlayer().sendMessage(ChatUtil.formatMessage("§7Couldn't find an EntityType named: §c" + args[1]));
+                            return true;
+                        }
+
+                        if(amount == 1) {
+
+                            spawnEntity(args[1], user, location);
+                            player.sendMessage(ChatUtil.formatMessage("§7Spawned 1 " + args[1].toUpperCase()));
+                            return true;
+                        }
+
+                        List<SpawnTaskData> spawnTaskDataList = new ArrayList<>();
+                        for(int i = 0; i < amount; i++) {
+                            spawnTaskDataList.add(new SpawnTaskData(args[1], location));
+                        }
+
+                        player.sendMessage(ChatUtil.formatMessage("§7Spawning " + amount + " " + args[1].toUpperCase() + "s"));
+
+                        SpawnTask spawnTask = new SpawnTask(spawnTaskDataList, user);
+                        spawnTask.start();
+
+                        return true;
                     }
-
-                    player.sendMessage(ChatUtil.formatMessage("§7Spawning " + amount + " " + args[1].toUpperCase() + "s"));
-
-                    SpawnTask spawnTask = new SpawnTask(spawnTaskDataList, user);
-                    spawnTask.start();
-
-                    return true;
-                }
+                default:
+                    sendHelpList(player);
             }
-            sendHelpList(player);
         }
         return true;
+    }
+
+    private boolean isPermitted(Player player) {
+        return player.hasPermission(Variables.permission) || player.isOp();
     }
 
     private void sendHelpList(Player player) {
@@ -149,12 +149,12 @@ public class ASMCommand implements CommandExecutor {
         player.sendMessage(ChatUtil.formatFollowMessage("§8Stop SpawnTask with the id X"));
     }
 
-    private boolean assertEntityTypeExist(String entityTypeName) {
+    private boolean assertEntityTypeDoesNotExist(String entityTypeName) {
 
         if(entityTypeName == null) return true;
 
         try {
-            EntityType entityType = EntityType.valueOf(entityTypeName.toUpperCase(Locale.ENGLISH));
+            EntityType.valueOf(entityTypeName.toUpperCase(Locale.ENGLISH));
         } catch (Exception e) {
             return true;
         }
