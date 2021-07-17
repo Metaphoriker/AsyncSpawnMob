@@ -1,0 +1,7 @@
+name: AsyncSpawnMob
+version: ${project.version}
+main: de.luzifer.asm.AsyncSpawnMob
+
+commands:
+  asyncspawnmob:
+    aliases: [asm]
