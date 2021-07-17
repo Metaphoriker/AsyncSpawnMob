@@ -5,6 +5,7 @@ import de.luzifer.asm.api.mob.spawner.SpawnTaskData;
 import de.luzifer.asm.api.mob.spawner.SpawnTaskId;
 import de.luzifer.asm.api.user.User;
 import de.luzifer.asm.api.user.UserService;
+import de.luzifer.asm.config.Variables;
 import de.luzifer.asm.utils.ChatUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -37,15 +38,23 @@ public class ASMCommand implements CommandExecutor {
 
         if(command.getName().equalsIgnoreCase("asyncspawnmob")) {
 
+            if(!player.hasPermission(Variables.permission)) {
+
+                player.sendMessage(ChatUtil.formatMessage("§cYou don't have the permission to do that"));
+                return true;
+            }
+
             Location location = getTargetBlock(player).getLocation();
             if(args.length == 1) {
                 if(args[0].equalsIgnoreCase("list")) {
+
                     player.sendMessage(ChatUtil.formatMessage("§7You have §8[§a" + user.getTaskIds().size() + "§8] §7tasks running:"));
                     for(SpawnTaskId taskId : user.getTaskIds())
                         player.sendMessage(ChatUtil.formatMessage("§7- §f" + taskId.getTaskId()));
 
                     return true;
                 }
+
                 sendHelpList(player);
                 return true;
             } else if(args.length == 2) {

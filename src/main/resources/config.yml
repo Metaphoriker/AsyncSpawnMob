@@ -6,3 +6,6 @@ Spawning-Delay: 1
 # EXAMPLE: If you spawn 1000 monsters, 50 will be spawned every delay.
 # FORMULA: Amount/100*Spawn-Per-Tick
 Spawn-Per-Delay: 5
+
+# The needed permission to use the command
+Needed-Permission: "asm.use"
