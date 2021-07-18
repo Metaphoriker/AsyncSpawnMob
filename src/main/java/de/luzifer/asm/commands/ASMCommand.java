@@ -203,16 +203,16 @@ public class ASMCommand implements CommandExecutor {
 
         for(Mob mob : container.getList()) {
 
-            String versionString = (version >= Double.parseDouble(mob.getSinceVersion()) ? "§a" : "§c") + mob.getSinceVersion();
+            String versionString = (version >= Double.parseDouble(mob.getSinceVersion().split("\\.")[1]) ? "§a" : "§c") + mob.getSinceVersion();
             String mobSynonyms = Arrays.toString(mob.getSynonyms()).replace("[", "").toLowerCase().replace("]", "");
-            user.asPlayer().sendMessage(ChatUtil.formatFollowMessage("§f" + mobSynonyms + " §8(MC. version " + versionString + " or higher§8)"));
+            user.asPlayer().sendMessage(ChatUtil.formatFollowMessage("§f" + mobSynonyms + " §8(" + versionString + " or higher§8)"));
         }
     }
 
     private double getBukkitVersion() {
 
         String version = Bukkit.getBukkitVersion().split("-")[0];
-        return Double.parseDouble(version.split("\\.")[0] + version.split("\\.")[1]);
+        return Double.parseDouble(version.split("\\.")[1]);
     }
 
     private void spawnEntity(String entityTypeName, User user, Location spawnAt) {
