@@ -10,12 +10,12 @@ public interface UserService {
 
     static User getOrCreateUser(UUID uuid) {
 
-        for(User u : users) {
+        for(User u : users)
             if(u.uuid.equals(uuid)) return u;
-        }
 
         User user = new User(uuid);
         users.add(user);
+
         return user;
     }
 

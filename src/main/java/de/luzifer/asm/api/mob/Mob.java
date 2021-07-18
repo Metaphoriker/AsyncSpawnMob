@@ -134,12 +134,11 @@ public enum Mob {
     }
 
     Mob(String existsSinceVersion, String identifier) {
-        this.sinceVersion = existsSinceVersion;
-        this.removedSinceVersion = "NOT";
-        this.identifier = identifier;
+        this(existsSinceVersion, "NOT", identifier);
     }
 
     Mob(String existsSinceVersion, String removedSinceVersion, String identifier) {
+
         this.sinceVersion = existsSinceVersion;
         this.removedSinceVersion = removedSinceVersion;
         this.identifier = identifier;

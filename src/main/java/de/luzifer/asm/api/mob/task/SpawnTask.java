@@ -20,6 +20,7 @@ public class SpawnTask {
     private int taskId;
 
     public SpawnTask(List<SpawnTaskData> spawnTaskDataList, User user) {
+
         this.spawnTaskDataList = spawnTaskDataList;
         this.entityTypeName = spawnTaskDataList.get(0).getEntityTypeName();
         this.amount = spawnTaskDataList.size();

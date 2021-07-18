@@ -42,8 +42,8 @@ public class ASMCommand implements CommandExecutor {
             }
 
             Location location = getTargetBlock(player).getLocation();
-            boolean sendHelpList = false;
 
+            boolean sendHelpList = false;
             switch (args.length) {
                 case 1:
                     if(args[0].equalsIgnoreCase("moblist")) {
@@ -203,15 +203,18 @@ public class ASMCommand implements CommandExecutor {
 
         for(Mob mob : container.getList()) {
 
-            boolean versionIsHigherThanSinceVersion = version >= Double.parseDouble(mob.getSinceVersion().split("\\.")[1]);
-            boolean versionIsLowerThanRemovedSinceVersion = mob.getRemovedSinceVersion().equalsIgnoreCase("NOT") || Double.parseDouble(mob.getRemovedSinceVersion().split("\\.")[1]) >= version;
-            boolean mobExist = (versionIsHigherThanSinceVersion && versionIsLowerThanRemovedSinceVersion);
-
-            String versionString = (mobExist ? "§a" : "§c") + mob.getSinceVersion();
+            String versionString = (doesMobExist(mob, version) ? "§a" : "§c") + mob.getSinceVersion();
             String mobSynonyms = mob.getIdentifier().replace("[", "").toLowerCase().replace("]", "");
 
             user.asPlayer().sendMessage(ChatUtil.formatFollowMessage("§f" + mobSynonyms + " §8(" + versionString + (mob.getRemovedSinceVersion().equalsIgnoreCase("NOT") ? " or higher§8)" : " - " + mob.getRemovedSinceVersion() + "§8)")));
         }
+    }
+
+    private boolean doesMobExist(Mob mob, double version) {
+
+        boolean versionIsHigherThanSinceVersion = version >= Double.parseDouble(mob.getSinceVersion().split("\\.")[1]);
+        boolean versionIsLowerThanRemovedSinceVersion = mob.getRemovedSinceVersion().equalsIgnoreCase("NOT") || Double.parseDouble(mob.getRemovedSinceVersion().split("\\.")[1]) >= version;
+        return (versionIsHigherThanSinceVersion && versionIsLowerThanRemovedSinceVersion);
     }
 
     private double getBukkitVersion() {
@@ -283,9 +286,11 @@ public class ASMCommand implements CommandExecutor {
     }
 
     public <V> Container<V> getPaginatedListWithPage(List<V> toPaginate, int page, int sizePerPage) {
+
         List<V> list = new ArrayList<>();
 
         for(int i = 0; i < sizePerPage; i++) {
+
             int index = sizePerPage*page+i;
             if(index >= toPaginate.size()) break;
 
@@ -306,6 +311,7 @@ public class ASMCommand implements CommandExecutor {
         private final Integer page;
 
         public Container(List<K> list, Integer page) {
+
             this.list = list;
             this.page = page;
         }
