@@ -4,7 +4,7 @@ Spawning-Delay: 1
 
 # Sets the percentage of spawned monsters of each Task every Delay
 # EXAMPLE: If you spawn 1000 monsters, 50 will be spawned every delay.
-# FORMULA: Amount/100*Spawn-Per-Tick
+# FORMULA: Amount/100*Spawn-Per-Delay
 Spawn-Per-Delay: 3
 
 # Sets the spawning reach

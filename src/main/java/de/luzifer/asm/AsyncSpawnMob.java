@@ -2,6 +2,7 @@ package de.luzifer.asm;
 
 import de.luzifer.asm.commands.ASMCommand;
 import de.luzifer.asm.config.Variables;
+import de.luzifer.asm.listener.PlayerJoinQuitListener;
 import de.luzifer.asm.updatechecker.UpdateChecker;
 import de.luzifer.asm.updatechecker.UpdateCheckerTimer;
 import org.bukkit.Bukkit;
@@ -19,6 +20,7 @@ public final class AsyncSpawnMob extends JavaPlugin {
 
         loadConfig();
         loadCommands();
+        loadListener();
 
         Variables.initialize();
 
@@ -38,5 +40,9 @@ public final class AsyncSpawnMob extends JavaPlugin {
 
     private void loadCommands() {
         getCommand("asyncspawnmob").setExecutor(new ASMCommand());
+    }
+
+    private void loadListener() {
+        Bukkit.getPluginManager().registerEvents(new PlayerJoinQuitListener(), this);
     }
 }
