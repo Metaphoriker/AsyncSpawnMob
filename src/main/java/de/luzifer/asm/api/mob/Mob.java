@@ -19,7 +19,10 @@ public enum Mob {
     ENDER_CRYSTAL("1.8", "ENDER_CRYSTAL"),
     ENDER_DRAGON("1.8", "ENDER_DRAGON"),
     ENDER_SIGNAL("1.8", "ENDER_SIGNAL"),
+    ENDERMAN("1.8", "ENDERMAN"),
+    ENDERMITE("1.8", "ENDERMITE"),
     EXPERIENCE_ORB("1.8", "EXPERIENCE_ORB"),
+    FALLING_BLOCK("1.8", "FALLING_BLOCK"),
     FIREBALL("1.8", "FIREBALL"),
     FIREWORK("1.8", "FIREWORK"),
     GHAST("1.8", "GHAST"),
@@ -39,7 +42,7 @@ public enum Mob {
     MUSHROOM_COW("1.8", "MUSHROOM_COW"),
     OCELOT("1.8", "OCELOT"),
     PIG("1.8", "PIG"),
-    PIG_ZOMBIE("1.8", "PIG_ZOMBIE"),
+    PIG_ZOMBIE("1.8", "PIG_ZOMBIE", "ZOMBIFIED_PIGLIN"),
     PRIMED_TNT("1.8", "PRIMED_TNT"),
     RABBIT("1.8", "RABBIT"),
     SHEEP("1.8", "SHEEP"),
@@ -58,7 +61,67 @@ public enum Mob {
     WITHER("1.8", "WITHER"),
     WITHER_SKULL("1.8", "WITHER_SKULL"),
     WOLF("1.8", "WOLF"),
-    ZOMBIE("1.8", "ZOMBIE");
+    ZOMBIE("1.8", "ZOMBIE"),
+
+    //TODO to test the following
+    AREA_EFFECT_CLOUD("1.9", "AREA_EFFECT_CLOUD"),
+    DRAGON_FIREBALL("1.9", "DRAGON_FIREBALL"),
+    LINGERING_POTION("1.9", "LINGERING_POTION"),
+    SHULKER("1.9", "SHULKER"),
+    SHULKER_BULLET("1.9", "SHULKER_BULLET"),
+    SPECTRAL_ARROW("1.9", "SPECTRAL_ARROW"),
+    TIPPED_ARROW("1.9", "TIPPED_ARROW"),
+
+    POLAR_BEAR("1.10", "POLAR_BEAR"),
+
+    DONKEY("1.11", "DONKEY"),
+    ELDER_GUARDIAN("1.11", "ELDER_GUARDIAN"),
+    EVOKER("1.11", "EVOKER"),
+    EVOKER_FANGS("1.11", "EVOKER_FANGS"),
+    HUSK("1.11", "HUSK"),
+    LLAMA("1.11", "LLAMA"),
+    LLAMA_SPIT("1.11", "LLAMA_SPIT"),
+    MULE("1.11", "MULE"),
+    SKELETON_HORSE("1.11", "SKELETON_HORSE"),
+    STRAY("1.11", "STRAY"),
+    VEX("1.11", "VEX"),
+    VINDICATOR("1.11", "VINDICATOR"),
+    WITHER_SKELETON("1.11", "WITHER_SKELETON"),
+    ZOMBIE_HORSE("1.11", "ZOMBIE_HORSE"),
+    ZOMBIE_VILLAGER("1.11", "ZOMBIE_VILLAGER"),
+
+    ILLUSIONER("1.12", "ILLUSIONER"),
+    PARROT("1.12", "PARROT"),
+
+    COD("1.13", "COD"),
+    DOLPHIN("1.13", "DOLPHIN"),
+    DROWNED("1.13", "DROWNED"),
+    PHANTOM("1.13", "PHANTOM"),
+    PUFFERFISH("1.13", "PUFFERFISH"),
+    SALMON("1.13", "SALMON"),
+    TRIDENT("1.13", "TRIDENT"),
+    TROPICAL_FISH("1.13", "TROPICAL_FISH"),
+    TURTLE("1.13", "TURTLE"),
+
+    CAT("1.14", "CAT"),
+    FOX("1.14", "FOX"),
+    PANDA("1.14", "PANDA"),
+    PILLAGER("1.14", "PILLAGER"),
+    RAVAGER("1.14", "RAVAGER"),
+    TRADER_LLAMA("1.14", "TRADER_LLAMA"),
+    WANDERING_TRADER("1.14", "WANDERING_TRADER"),
+
+    BEE("1.15", "BEE"),
+
+    HOGLIN("1.16", "HOGLIN"),
+    PIGLIN("1.16", "PIGLIN"),
+    PIGLIN_BRUTE("1.16", "PIGLIN_BRUTE"),
+    STRIDER("1.16", "STRIDER"),
+    ZOGLIN("1.16", "ZOGLIN"),
+
+    AXOLOTL("1.17", "AXOLOTL"),
+    GLOW_SQUID("1.17", "GLOW_SQUID"),
+    GOAT("1.17", "GOAT");
 
     private final String sinceVersion;
     private final String[] synonyms;
