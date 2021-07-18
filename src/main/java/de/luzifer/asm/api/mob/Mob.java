@@ -2,8 +2,6 @@ package de.luzifer.asm.api.mob;
 
 import org.bukkit.entity.EntityType;
 
-import java.util.Arrays;
-
 public enum Mob {
 
     ARMOR_STAND("1.8", "ARMOR_STAND"),
@@ -42,7 +40,7 @@ public enum Mob {
     MUSHROOM_COW("1.8", "MUSHROOM_COW"),
     OCELOT("1.8", "OCELOT"),
     PIG("1.8", "PIG"),
-    PIG_ZOMBIE("1.8", "PIG_ZOMBIE"),
+    PIG_ZOMBIE("1.8", "1.16", "PIG_ZOMBIE"),
     PRIMED_TNT("1.8", "PRIMED_TNT"),
     RABBIT("1.8", "RABBIT"),
     SHEEP("1.8", "SHEEP"),
@@ -63,7 +61,6 @@ public enum Mob {
     WOLF("1.8", "WOLF"),
     ZOMBIE("1.8", "ZOMBIE"),
 
-    //TODO to test the following
     AREA_EFFECT_CLOUD("1.9", "AREA_EFFECT_CLOUD"),
     DRAGON_FIREBALL("1.9", "DRAGON_FIREBALL"),
     LINGERING_POTION("1.9", "LINGERING_POTION"),
@@ -125,37 +122,45 @@ public enum Mob {
     GOAT("1.17", "GOAT");
 
     private final String sinceVersion;
-    private final String[] synonyms;
+    private final String removedSinceVersion;
+    private final String identifier;
 
     public static Mob fromName(String name) {
 
         for(Mob mob : Mob.values()) {
-            for(String names : mob.getSynonyms()) {
-                if(mob.doesEntityTypeExist(names) && names.equalsIgnoreCase(name)) return mob;
-            }
+            if(mob.doesEntityTypeExist(mob.identifier) && mob.identifier.equalsIgnoreCase(name)) return mob;
         }
         throw new IllegalArgumentException("There is no Mob with the specified name: " + name);
     }
 
-    Mob(String existsSinceVersion, String... synonyms) {
+    Mob(String existsSinceVersion, String identifier) {
         this.sinceVersion = existsSinceVersion;
-        this.synonyms = synonyms;
+        this.removedSinceVersion = "NOT";
+        this.identifier = identifier;
+    }
+
+    Mob(String existsSinceVersion, String removedSinceVersion, String identifier) {
+        this.sinceVersion = existsSinceVersion;
+        this.removedSinceVersion = removedSinceVersion;
+        this.identifier = identifier;
     }
 
     public String getSinceVersion() {
         return sinceVersion;
     }
 
-    public String[] getSynonyms() {
-        return synonyms;
+    public String getRemovedSinceVersion() {
+        return removedSinceVersion;
+    }
+
+    public String getIdentifier() {
+        return identifier;
     }
 
     public EntityType convertToEntityType() {
 
-        for(String name : synonyms) {
-            if(doesEntityTypeExist(name)) return EntityType.valueOf(name);
-        }
-        throw new IllegalArgumentException("There is no EntityType with the specified name(s): " + Arrays.toString(synonyms));
+        if(doesEntityTypeExist(identifier)) return EntityType.valueOf(identifier);
+        throw new IllegalArgumentException("There is no EntityType with the specified name(s): " + identifier);
     }
 
     private boolean doesEntityTypeExist(String name) {

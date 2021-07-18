@@ -203,9 +203,14 @@ public class ASMCommand implements CommandExecutor {
 
         for(Mob mob : container.getList()) {
 
-            String versionString = (version >= Double.parseDouble(mob.getSinceVersion().split("\\.")[1]) ? "§a" : "§c") + mob.getSinceVersion();
-            String mobSynonyms = Arrays.toString(mob.getSynonyms()).replace("[", "").toLowerCase().replace("]", "");
-            user.asPlayer().sendMessage(ChatUtil.formatFollowMessage("§f" + mobSynonyms + " §8(" + versionString + " or higher§8)"));
+            boolean versionIsHigherThanSinceVersion = version >= Double.parseDouble(mob.getSinceVersion().split("\\.")[1]);
+            boolean versionIsLowerThanRemovedSinceVersion = mob.getRemovedSinceVersion().equalsIgnoreCase("NOT") || Double.parseDouble(mob.getRemovedSinceVersion().split("\\.")[1]) >= version;
+            boolean mobExist = (versionIsHigherThanSinceVersion && versionIsLowerThanRemovedSinceVersion);
+
+            String versionString = (mobExist ? "§a" : "§c") + mob.getSinceVersion();
+            String mobSynonyms = mob.getIdentifier().replace("[", "").toLowerCase().replace("]", "");
+
+            user.asPlayer().sendMessage(ChatUtil.formatFollowMessage("§f" + mobSynonyms + " §8(" + versionString + (mob.getRemovedSinceVersion().equalsIgnoreCase("NOT") ? " or higher§8)" : " - " + mob.getRemovedSinceVersion() + "§8)")));
         }
     }
 
@@ -289,7 +294,7 @@ public class ASMCommand implements CommandExecutor {
 
         if(list.isEmpty() && page != 0) return getPaginatedListWithPage(toPaginate, page-1, sizePerPage);
 
-        return new Container<V>(list, page);
+        return new Container<>(list, page);
     }
 
     /*
