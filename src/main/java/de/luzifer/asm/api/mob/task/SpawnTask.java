@@ -13,6 +13,7 @@ import java.util.List;
 public class SpawnTask {
 
     private final List<SpawnTaskData> spawnTaskDataList;
+    private final String entityTypeName;
     private final User user;
     private final int amount;
 
@@ -20,6 +21,7 @@ public class SpawnTask {
 
     public SpawnTask(List<SpawnTaskData> spawnTaskDataList, User user) {
         this.spawnTaskDataList = spawnTaskDataList;
+        this.entityTypeName = spawnTaskDataList.get(0).getEntityTypeName();
         this.amount = spawnTaskDataList.size();
         this.user = user;
     }
@@ -54,13 +56,13 @@ public class SpawnTask {
 
     private void removeTaskFromTaskOwner() {
 
-        user.asPlayer().sendMessage(ChatUtil.formatMessage("§7Task finished successfully. TaskId: §f" + taskId));
+        user.asPlayer().sendMessage(ChatUtil.formatMessage("§7Spawned " + amount + " " + entityTypeName.toUpperCase() + "s"));
         user.getTaskIds().remove(SpawnTaskId.of(taskId));
     }
 
     private void addTaskToTaskOwner() {
 
-        user.asPlayer().sendMessage(ChatUtil.formatMessage("§7Task started successfully. TaskId: §f" + taskId));
+        user.asPlayer().sendMessage(ChatUtil.formatFollowMessage("§8TaskId: " + taskId));
         user.getTaskIds().add(SpawnTaskId.of(taskId));
     }
 

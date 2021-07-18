@@ -101,8 +101,8 @@ public class ASMCommand implements CommandExecutor {
                             return true;
                         }
 
-                        prepareAndStartSpawnTask(amount, args[1], user, location);
                         player.sendMessage(ChatUtil.formatMessage("§7Spawning " + amount + " " + args[1].toUpperCase() + "s"));
+                        prepareAndStartSpawnTask(amount, args[1], user, location);
 
                         return true;
                     }
