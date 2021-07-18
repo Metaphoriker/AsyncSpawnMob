@@ -42,7 +42,7 @@ public enum Mob {
     MUSHROOM_COW("1.8", "MUSHROOM_COW"),
     OCELOT("1.8", "OCELOT"),
     PIG("1.8", "PIG"),
-    PIG_ZOMBIE("1.8", "PIG_ZOMBIE", "ZOMBIFIED_PIGLIN"),
+    PIG_ZOMBIE("1.8", "PIG_ZOMBIE"),
     PRIMED_TNT("1.8", "PRIMED_TNT"),
     RABBIT("1.8", "RABBIT"),
     SHEEP("1.8", "SHEEP"),
@@ -118,6 +118,7 @@ public enum Mob {
     PIGLIN_BRUTE("1.16", "PIGLIN_BRUTE"),
     STRIDER("1.16", "STRIDER"),
     ZOGLIN("1.16", "ZOGLIN"),
+    ZOMBIFIED_PIGLIN("1.16", "ZOMBIFIED_PIGLIN"),
 
     AXOLOTL("1.17", "AXOLOTL"),
     GLOW_SQUID("1.17", "GLOW_SQUID"),
