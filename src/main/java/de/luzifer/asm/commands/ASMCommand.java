@@ -44,17 +44,18 @@ public class ASMCommand implements CommandExecutor {
             }
 
             Location location = getTargetBlock(player).getLocation();
+            boolean sendHelpList = false;
 
             switch (args.length) {
                 case 1:
                     if(args[0].equalsIgnoreCase("list")) {
 
-                        player.sendMessage(ChatUtil.formatMessage("§7You have §8[§a" + user.getTaskIds().size() + "§8] §7task(s) running:"));
-                        for(SpawnTaskId taskId : user.getTaskIds())
-                            player.sendMessage(ChatUtil.formatMessage("§7- §f" + taskId.getTaskId()));
-
+                        sendTaskList(user);
                         return true;
                     }
+
+                    sendHelpList = true;
+                    break;
                 case 2:
                     if(args[0].equalsIgnoreCase("stop")) {
 
@@ -71,10 +72,7 @@ public class ASMCommand implements CommandExecutor {
                             return true;
                         }
 
-                        Bukkit.getScheduler().cancelTask(taskId);
-
-                        player.sendMessage(ChatUtil.formatMessage("§7Task stopped successfully. TaskId: §f" + taskId));
-                        user.getTaskIds().remove(SpawnTaskId.of(taskId));
+                        stopAndRemoveTask(user, taskId);
                         return true;
                     } else if(args[0].equalsIgnoreCase("spawn")) {
 
@@ -84,6 +82,9 @@ public class ASMCommand implements CommandExecutor {
                         spawnASingleEntity(args[1], user, location);
                         return true;
                     }
+
+                    sendHelpList = true;
+                    break;
                 case 3:
                     if(args[0].equalsIgnoreCase("spawn")) {
 
@@ -106,15 +107,45 @@ public class ASMCommand implements CommandExecutor {
 
                         return true;
                     }
+
+                    sendHelpList = true;
+                    break;
                 default:
                     sendHelpList(player);
             }
+
+            if(sendHelpList) sendHelpList(player);
         }
         return true;
     }
 
     private boolean isPermitted(Player player) {
         return player.hasPermission(Variables.permission) || player.isOp();
+    }
+
+    private int getAmount(String amountString, User user) {
+
+        int amount = 1;
+        try {
+            amount = Integer.parseInt(amountString);
+        } catch (Exception e) {
+            user.asPlayer().sendMessage(ChatUtil.formatMessage("§7Invalid amount: Amount has been set to 1."));
+        }
+        return amount;
+    }
+
+    private Block getTargetBlock(Player player) {
+
+        BlockIterator iterator = new BlockIterator(player, Variables.spawningDistance);
+        Block lastBlock = iterator.next();
+        while (iterator.hasNext()) {
+            lastBlock = iterator.next();
+            if (lastBlock.getType() == Material.AIR) {
+                continue;
+            }
+            break;
+        }
+        return lastBlock;
     }
 
     private void sendHelpList(Player player) {
@@ -137,19 +168,11 @@ public class ASMCommand implements CommandExecutor {
         player.sendMessage(ChatUtil.formatFollowMessage("§8Stop SpawnTask with the id X"));
     }
 
-    private boolean assertEntityTypeDoesNotExist(String entityTypeName, User user) {
+    private void sendTaskList(User user) {
 
-        if(entityTypeName == null)
-            throw new IllegalArgumentException();
-
-        try {
-            Mob.fromName(entityTypeName.toUpperCase(Locale.ENGLISH));
-        } catch (Exception e) {
-
-            user.asPlayer().sendMessage(ChatUtil.formatMessage("§7Couldn't find a Mob named: §c" + entityTypeName));
-            return true;
-        }
-        return false;
+        user.asPlayer().sendMessage(ChatUtil.formatMessage("§7You have §8[§a" + user.getTaskIds().size() + "§8] §7task(s) running:"));
+        for(SpawnTaskId taskId : user.getTaskIds())
+            user.asPlayer().sendMessage(ChatUtil.formatMessage("§7- §f" + taskId.getTaskId()));
     }
 
     private void spawnEntity(String entityTypeName, User user, Location spawnAt) {
@@ -158,21 +181,18 @@ public class ASMCommand implements CommandExecutor {
         user.asPlayer().getWorld().spawnEntity(spawnAt.clone().add(0.5, 1, 0.5), mob.convertToEntityType());
     }
 
-    private int getAmount(String amountString, User user) {
-
-        int amount = 1;
-        try {
-            amount = Integer.parseInt(amountString);
-        } catch (Exception e) {
-            user.asPlayer().sendMessage(ChatUtil.formatMessage("§7Invalid amount: Amount has been set to 1."));
-        }
-        return amount;
-    }
-
     private void spawnASingleEntity(String entityName, User user, Location location) {
 
         spawnEntity(entityName, user, location);
         user.asPlayer().sendMessage(ChatUtil.formatMessage("§7Spawned 1 " + entityName.toUpperCase()));
+    }
+
+    private void stopAndRemoveTask(User user, int taskId) {
+
+        Bukkit.getScheduler().cancelTask(taskId);
+
+        user.asPlayer().sendMessage(ChatUtil.formatMessage("§7Task stopped successfully. TaskId: §f" + taskId));
+        user.getTaskIds().remove(SpawnTaskId.of(taskId));
     }
 
     private boolean checkAmountForInvalid(int amount, Player player) {
@@ -202,18 +222,18 @@ public class ASMCommand implements CommandExecutor {
         spawnTask.start();
     }
 
-    private Block getTargetBlock(Player player) {
+    private boolean assertEntityTypeDoesNotExist(String entityTypeName, User user) {
 
-        BlockIterator iterator = new BlockIterator(player, Variables.spawningDistance);
-        Block lastBlock = iterator.next();
-        while (iterator.hasNext()) {
-            lastBlock = iterator.next();
-            if (lastBlock.getType() == Material.AIR) {
-                continue;
-            }
-            break;
+        if(entityTypeName == null)
+            throw new IllegalArgumentException();
+
+        try {
+            Mob.fromName(entityTypeName.toUpperCase(Locale.ENGLISH));
+        } catch (Exception e) {
+
+            user.asPlayer().sendMessage(ChatUtil.formatMessage("§7Couldn't find a Mob named: §c" + entityTypeName));
+            return true;
         }
-        return lastBlock;
+        return false;
     }
-
 }
