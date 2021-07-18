@@ -18,9 +18,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.util.BlockIterator;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 public class ASMCommand implements CommandExecutor {
 
@@ -48,7 +46,11 @@ public class ASMCommand implements CommandExecutor {
 
             switch (args.length) {
                 case 1:
-                    if(args[0].equalsIgnoreCase("list")) {
+                    if(args[0].equalsIgnoreCase("moblist")) {
+
+                        sendMobList(user, 0);
+                        return true;
+                    } else if(args[0].equalsIgnoreCase("list")) {
 
                         sendTaskList(user);
                         return true;
@@ -80,6 +82,17 @@ public class ASMCommand implements CommandExecutor {
                             return true;
 
                         spawnASingleEntity(args[1], user, location);
+                        return true;
+                    } else if(args[0].equalsIgnoreCase("moblist")) {
+
+                        int page = 0;
+                        try {
+                            page = Integer.parseInt(args[1]);
+                        } catch (Exception e) {
+                            player.sendMessage(ChatUtil.formatMessage("§7Please enter a valid page."));
+                        }
+
+                        sendMobList(user, page);
                         return true;
                     }
 
@@ -158,6 +171,9 @@ public class ASMCommand implements CommandExecutor {
         player.sendMessage(ChatUtil.formatMessage("§6/asyncspawnmob list"));
         player.sendMessage(ChatUtil.formatFollowMessage("§8List of running tasks"));
 
+        player.sendMessage(ChatUtil.formatMessage("§6/asyncspawnmob moblist <page>"));
+        player.sendMessage(ChatUtil.formatFollowMessage("§8PaginatedList of spawnable monsters"));
+
         player.sendMessage(ChatUtil.formatMessage("§6/asyncspawnmob spawn <type>"));
         player.sendMessage(ChatUtil.formatFollowMessage("§8Spawn 1 entity of type X"));
 
@@ -172,7 +188,31 @@ public class ASMCommand implements CommandExecutor {
 
         user.asPlayer().sendMessage(ChatUtil.formatMessage("§7You have §8[§a" + user.getTaskIds().size() + "§8] §7task(s) running:"));
         for(SpawnTaskId taskId : user.getTaskIds())
-            user.asPlayer().sendMessage(ChatUtil.formatMessage("§7- §f" + taskId.getTaskId()));
+            user.asPlayer().sendMessage(ChatUtil.formatFollowMessage("§7§f" + taskId.getTaskId()));
+    }
+
+    private void sendMobList(User user, int page) {
+
+        Container<Mob> container = getPaginatedListWithPage(Arrays.asList(Mob.values()), page, 8);
+        user.asPlayer().sendMessage(ChatUtil.formatMessage("§7A list of spawnable mobs §8[§7" + container.getPage() + "§8]:"));
+
+        sendMobList(user, container, getBukkitVersion());
+    }
+
+    private void sendMobList(User user, Container<Mob> container, double version) {
+
+        for(Mob mob : container.getList()) {
+
+            String versionString = (version >= Double.parseDouble(mob.getSinceVersion()) ? "§a" : "§c") + mob.getSinceVersion();
+            String mobSynonyms = Arrays.toString(mob.getSynonyms()).replace("[", "").toLowerCase().replace("]", "");
+            user.asPlayer().sendMessage(ChatUtil.formatFollowMessage("§f" + mobSynonyms + " §8(MC. version " + versionString + " or higher§8)"));
+        }
+    }
+
+    private double getBukkitVersion() {
+
+        String version = Bukkit.getBukkitVersion().split("-")[0];
+        return Double.parseDouble(version.split("\\.")[0] + version.split("\\.")[1]);
     }
 
     private void spawnEntity(String entityTypeName, User user, Location spawnAt) {
@@ -235,5 +275,42 @@ public class ASMCommand implements CommandExecutor {
             return true;
         }
         return false;
+    }
+
+    public <V> Container<V> getPaginatedListWithPage(List<V> toPaginate, int page, int sizePerPage) {
+        List<V> list = new ArrayList<>();
+
+        for(int i = 0; i < sizePerPage; i++) {
+            int index = sizePerPage*page+i;
+            if(index >= toPaginate.size()) break;
+
+            list.add(toPaginate.get(index));
+        }
+
+        if(list.isEmpty() && page != 0) return getPaginatedListWithPage(toPaginate, page-1, sizePerPage);
+
+        return new Container<V>(list, page);
+    }
+
+    /*
+    Not sure why i am doing it like this, but it works... so....
+     */
+    static class Container<K> {
+
+        private final List<K> list;
+        private final Integer page;
+
+        public Container(List<K> list, Integer page) {
+            this.list = list;
+            this.page = page;
+        }
+
+        public List<K> getList() {
+            return list;
+        }
+
+        public Integer getPage() {
+            return page;
+        }
     }
 }
