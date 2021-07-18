@@ -106,6 +106,12 @@ public class ASMCommand implements CommandExecutor {
                             return true;
                         }
 
+                        if(amount >= Variables.maxSpawningAmount) {
+
+                            player.sendMessage(ChatUtil.formatMessage("§7No more mobs than §c" + Variables.maxSpawningAmount + "§7 may be spawned."));
+                            return true;
+                        }
+
                         List<SpawnTaskData> spawnTaskDataList = new ArrayList<>();
                         for(int i = 0; i < amount; i++) {
                             spawnTaskDataList.add(new SpawnTaskData(args[1], location));

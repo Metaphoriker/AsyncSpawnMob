@@ -11,6 +11,10 @@ Spawn-Per-Delay: 3
 # NOTE: The monsters will be spawned to where the player is looking to
 Spawning-Distance: 10
 
+# Sets the max. spawning amount
+# Can't spawn any higher amount of mobs
+Max-Spawning-Amount: 1000
+
 # The needed permission to use the command
 # NOTE: Op also works
 Needed-Permission: "asm.use"
