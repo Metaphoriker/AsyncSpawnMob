@@ -78,49 +78,31 @@ public class ASMCommand implements CommandExecutor {
                         return true;
                     } else if(args[0].equalsIgnoreCase("spawn")) {
 
-                        if(assertEntityTypeDoesNotExist(args[1])) {
-                            user.asPlayer().sendMessage(ChatUtil.formatMessage("§7Couldn't find an EntityType named: §c" + args[1]));
+                        if(assertEntityTypeDoesNotExist(args[1], user))
                             return true;
-                        }
 
-                        spawnEntity(args[1], user, location);
-                        player.sendMessage(ChatUtil.formatMessage("§7Spawned 1 " + args[1].toUpperCase()));
+                        spawnASingleEntity(args[1], user, location);
                         return true;
                     }
                 case 3:
                     if(args[0].equalsIgnoreCase("spawn")) {
 
+                        if(assertEntityTypeDoesNotExist(args[1], user))
+                            return true;
+
                         int amount = getAmount(args[2], user);
 
-                        if(amount == 0) return true;
-
-                        if(assertEntityTypeDoesNotExist(args[1])) {
-                            user.asPlayer().sendMessage(ChatUtil.formatMessage("§7Couldn't find an EntityType named: §c" + args[1]));
+                        if(checkAmountForInvalid(amount, player))
                             return true;
-                        }
 
                         if(amount == 1) {
 
-                            spawnEntity(args[1], user, location);
-                            player.sendMessage(ChatUtil.formatMessage("§7Spawned 1 " + args[1].toUpperCase()));
+                            spawnASingleEntity(args[1], user, location);
                             return true;
                         }
 
-                        if(amount >= Variables.maxSpawningAmount) {
-
-                            player.sendMessage(ChatUtil.formatMessage("§7No more mobs than §c" + Variables.maxSpawningAmount + "§7 may be spawned."));
-                            return true;
-                        }
-
-                        List<SpawnTaskData> spawnTaskDataList = new ArrayList<>();
-                        for(int i = 0; i < amount; i++) {
-                            spawnTaskDataList.add(new SpawnTaskData(args[1], location));
-                        }
-
+                        prepareAndStartSpawnTask(amount, args[1], user, location);
                         player.sendMessage(ChatUtil.formatMessage("§7Spawning " + amount + " " + args[1].toUpperCase() + "s"));
-
-                        SpawnTask spawnTask = new SpawnTask(spawnTaskDataList, user);
-                        spawnTask.start();
 
                         return true;
                     }
@@ -155,13 +137,16 @@ public class ASMCommand implements CommandExecutor {
         player.sendMessage(ChatUtil.formatFollowMessage("§8Stop SpawnTask with the id X"));
     }
 
-    private boolean assertEntityTypeDoesNotExist(String entityTypeName) {
+    private boolean assertEntityTypeDoesNotExist(String entityTypeName, User user) {
 
-        if(entityTypeName == null) return true;
+        if(entityTypeName == null)
+            throw new IllegalArgumentException();
 
         try {
             EntityType.valueOf(entityTypeName.toUpperCase(Locale.ENGLISH));
         } catch (Exception e) {
+
+            user.asPlayer().sendMessage(ChatUtil.formatMessage("§7Couldn't find an EntityType named: §c" + entityTypeName));
             return true;
         }
         return false;
@@ -182,6 +167,39 @@ public class ASMCommand implements CommandExecutor {
             user.asPlayer().sendMessage(ChatUtil.formatMessage("§7Invalid amount: Amount has been set to 1."));
         }
         return amount;
+    }
+
+    private void spawnASingleEntity(String entityName, User user, Location location) {
+
+        spawnEntity(entityName, user, location);
+        user.asPlayer().sendMessage(ChatUtil.formatMessage("§7Spawned 1 " + entityName.toUpperCase()));
+    }
+
+    private boolean checkAmountForInvalid(int amount, Player player) {
+
+        if(amount == 0) {
+
+            player.sendMessage(ChatUtil.formatMessage("§7Can't spawn 0 entities."));
+            return true;
+        }
+
+        if(amount >= Variables.maxSpawningAmount) {
+
+            player.sendMessage(ChatUtil.formatMessage("§7No more mobs than §c" + Variables.maxSpawningAmount + "§7 may be spawned."));
+            return true;
+        }
+        return false;
+    }
+
+    private void prepareAndStartSpawnTask(int amount, String entityName, User user, Location location) {
+
+        List<SpawnTaskData> spawnTaskDataList = new ArrayList<>();
+        for(int i = 0; i < amount; i++) {
+            spawnTaskDataList.add(new SpawnTaskData(entityName, location));
+        }
+
+        SpawnTask spawnTask = new SpawnTask(spawnTaskDataList, user);
+        spawnTask.start();
     }
 
     private Block getTargetBlock(Player player) {
