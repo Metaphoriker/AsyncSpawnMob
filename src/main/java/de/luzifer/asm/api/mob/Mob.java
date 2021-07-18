@@ -61,37 +61,37 @@ public enum Mob {
     ZOMBIE("1.8", "ZOMBIE");
 
     private final String sinceVersion;
-    private final String[] names;
+    private final String[] synonyms;
 
     public static Mob fromName(String name) {
 
         for(Mob mob : Mob.values()) {
-            for(String names : mob.getNames()) {
+            for(String names : mob.getSynonyms()) {
                 if(mob.doesEntityTypeExist(names) && names.equalsIgnoreCase(name)) return mob;
             }
         }
         throw new IllegalArgumentException("There is no Mob with the specified name: " + name);
     }
 
-    Mob(String version, String... names) {
-        this.sinceVersion = version;
-        this.names = names;
+    Mob(String existsSinceVersion, String... synonyms) {
+        this.sinceVersion = existsSinceVersion;
+        this.synonyms = synonyms;
     }
 
     public String getSinceVersion() {
         return sinceVersion;
     }
 
-    public String[] getNames() {
-        return names;
+    public String[] getSynonyms() {
+        return synonyms;
     }
 
     public EntityType convertToEntityType() {
 
-        for(String name : names) {
+        for(String name : synonyms) {
             if(doesEntityTypeExist(name)) return EntityType.valueOf(name);
         }
-        throw new IllegalArgumentException("There is no EntityType with the specified name(s): " + Arrays.toString(names));
+        throw new IllegalArgumentException("There is no EntityType with the specified name(s): " + Arrays.toString(synonyms));
     }
 
     private boolean doesEntityTypeExist(String name) {
