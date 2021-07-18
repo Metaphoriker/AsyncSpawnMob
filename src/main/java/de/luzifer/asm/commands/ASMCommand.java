@@ -49,7 +49,7 @@ public class ASMCommand implements CommandExecutor {
                 case 1:
                     if(args[0].equalsIgnoreCase("list")) {
 
-                        player.sendMessage(ChatUtil.formatMessage("§7You have §8[§a" + user.getTaskIds().size() + "§8] §7tasks running:"));
+                        player.sendMessage(ChatUtil.formatMessage("§7You have §8[§a" + user.getTaskIds().size() + "§8] §7task(s) running:"));
                         for(SpawnTaskId taskId : user.getTaskIds())
                             player.sendMessage(ChatUtil.formatMessage("§7- §f" + taskId.getTaskId()));
 
