@@ -11,7 +11,7 @@ import java.util.*;
 
 public class ASMTabCompleter implements TabCompleter {
 
-    final String[] ARGS = {"list", "moblist", "spawn", "stop"};
+    private final String[] ARGS = {"list", "moblist", "spawn", "stop"};
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
@@ -24,20 +24,23 @@ public class ASMTabCompleter implements TabCompleter {
                 Collections.sort(complete);
                 break;
             case 2:
-                if(args[0].equalsIgnoreCase("moblist")) {
-                    StringUtil.copyPartialMatches(args[1], Collections.singletonList("<page>"), complete);
-                } else if(args[0].equalsIgnoreCase("stop")) {
-                    StringUtil.copyPartialMatches(args[1], Collections.singletonList("<id>"), complete);
-                } else if(args[0].equalsIgnoreCase("spawn")) {
+                switch(args[0]) {
+                    case "moblist":
+                        StringUtil.copyPartialMatches(args[1], Collections.singletonList("<page>"), complete);
+                        break;
+                    case "stop":
+                        StringUtil.copyPartialMatches(args[1], Collections.singletonList("<id>"), complete);
+                        break;
+                    case "spawn":
+                        List<String> mobs = new ArrayList<>();
 
-                    List<String> mobs = new ArrayList<>();
+                        double version = getBukkitVersion();
+                        for(Mob mob : Mob.values())
+                            if(doesMobExist(mob, version)) mobs.add(mob.getIdentifier().toLowerCase());
 
-                    double version = getBukkitVersion();
-                    for(Mob mob : Mob.values())
-                        if(doesMobExist(mob, version)) mobs.add(mob.getIdentifier().toLowerCase());
-
-                    StringUtil.copyPartialMatches(args[1], mobs, complete);
-                    Collections.sort(complete);
+                        StringUtil.copyPartialMatches(args[1], mobs, complete);
+                        Collections.sort(complete);
+                        break;
                 }
                 break;
             case 3:
