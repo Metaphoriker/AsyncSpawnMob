@@ -158,7 +158,7 @@ public class ASMCommand implements CommandExecutor {
         } catch (Exception e) {
             return true;
         }
-        return true;
+        return false;
     }
 
     private void spawnEntity(String entityTypeName, User user, Location spawnAt) throws IllegalArgumentException {
