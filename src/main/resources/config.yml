@@ -1,11 +1,11 @@
 # Sets the delay between the monster spawns.
 # NOTE: Those are ticks. A Spawning-Delay of 1 spawns the monsters of the current task every tick
-Spawning-Delay: 1
+Spawning-Delay: 5
 
 # Sets the percentage of spawned monsters of each Task every Delay
 # EXAMPLE: If you spawn 1000 monsters, 50 will be spawned every delay.
 # FORMULA: Amount/100*Spawn-Per-Tick
-Spawn-Per-Delay: 5
+Spawn-Per-Delay: 3
 
 # Sets the spawning reach
 # NOTE: The monsters will be spawned to where the player is looking to
