@@ -285,7 +285,7 @@ public class ASMCommand implements CommandExecutor {
         return false;
     }
 
-    public <V> Container<V> getPaginatedListWithPage(List<V> toPaginate, int page, int sizePerPage) {
+    private <V> Container<V> getPaginatedListWithPage(List<V> toPaginate, int page, int sizePerPage) {
 
         List<V> list = new ArrayList<>();
 

@@ -1,6 +1,7 @@
 package de.luzifer.asm;
 
 import de.luzifer.asm.commands.ASMCommand;
+import de.luzifer.asm.commands.tabcompleter.ASMTabCompleter;
 import de.luzifer.asm.config.Variables;
 import de.luzifer.asm.listener.PlayerJoinQuitListener;
 import de.luzifer.asm.updatechecker.UpdateChecker;
@@ -39,7 +40,9 @@ public final class AsyncSpawnMob extends JavaPlugin {
     }
 
     private void loadCommands() {
+
         getCommand("asyncspawnmob").setExecutor(new ASMCommand());
+        getCommand("asyncspawnmob").setTabCompleter(new ASMTabCompleter());
     }
 
     private void loadListener() {
