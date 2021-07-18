@@ -1,8 +1,9 @@
 package de.luzifer.asm.commands;
 
-import de.luzifer.asm.api.mob.spawner.SpawnTask;
-import de.luzifer.asm.api.mob.spawner.SpawnTaskData;
-import de.luzifer.asm.api.mob.spawner.SpawnTaskId;
+import de.luzifer.asm.api.mob.Mob;
+import de.luzifer.asm.api.mob.task.SpawnTask;
+import de.luzifer.asm.api.mob.task.SpawnTaskData;
+import de.luzifer.asm.api.mob.task.SpawnTaskId;
 import de.luzifer.asm.api.user.User;
 import de.luzifer.asm.api.user.UserService;
 import de.luzifer.asm.config.Variables;
@@ -14,7 +15,6 @@ import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.util.BlockIterator;
 
@@ -143,19 +143,19 @@ public class ASMCommand implements CommandExecutor {
             throw new IllegalArgumentException();
 
         try {
-            EntityType.valueOf(entityTypeName.toUpperCase(Locale.ENGLISH));
+            Mob.fromName(entityTypeName.toUpperCase(Locale.ENGLISH));
         } catch (Exception e) {
 
-            user.asPlayer().sendMessage(ChatUtil.formatMessage("§7Couldn't find an EntityType named: §c" + entityTypeName));
+            user.asPlayer().sendMessage(ChatUtil.formatMessage("§7Couldn't find a Mob named: §c" + entityTypeName));
             return true;
         }
         return false;
     }
 
-    private void spawnEntity(String entityTypeName, User user, Location spawnAt) throws IllegalArgumentException {
+    private void spawnEntity(String entityTypeName, User user, Location spawnAt) {
 
-        EntityType entityType = EntityType.valueOf(entityTypeName.toUpperCase());
-        user.asPlayer().getWorld().spawnEntity(spawnAt.clone().add(0.5, 1, 0.5), entityType);
+        Mob mob = Mob.fromName(entityTypeName.toUpperCase());
+        user.asPlayer().getWorld().spawnEntity(spawnAt.clone().add(0.5, 1, 0.5), mob.convertToEntityType());
     }
 
     private int getAmount(String amountString, User user) {

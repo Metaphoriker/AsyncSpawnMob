@@ -1,6 +1,6 @@
 package de.luzifer.asm.api.user;
 
-import de.luzifer.asm.api.mob.spawner.SpawnTaskId;
+import de.luzifer.asm.api.mob.task.SpawnTaskId;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 

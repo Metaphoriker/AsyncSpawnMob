@@ -1,4 +1,4 @@
-package de.luzifer.asm.api.mob.spawner;
+package de.luzifer.asm.api.mob.task;
 
 import org.bukkit.Location;
 
