@@ -127,9 +127,9 @@ public enum Mob {
 
     public static Mob fromName(String name) {
 
-        for(Mob mob : Mob.values()) {
+        for(Mob mob : Mob.values())
             if(mob.doesEntityTypeExist(mob.identifier) && mob.identifier.equalsIgnoreCase(name)) return mob;
-        }
+
         throw new IllegalArgumentException("There is no Mob with the specified name: " + name);
     }
 

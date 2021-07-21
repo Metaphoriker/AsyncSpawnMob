@@ -45,7 +45,9 @@ public class ASMCommand implements CommandExecutor {
 
             boolean sendHelpList = false;
             switch (args.length) {
+
                 case 1:
+
                     if(args[0].equalsIgnoreCase("moblist")) {
 
                         sendMobList(user, 0);
@@ -59,6 +61,7 @@ public class ASMCommand implements CommandExecutor {
                     sendHelpList = true;
                     break;
                 case 2:
+
                     if(args[0].equalsIgnoreCase("stop")) {
 
                         int taskId;
@@ -99,6 +102,7 @@ public class ASMCommand implements CommandExecutor {
                     sendHelpList = true;
                     break;
                 case 3:
+
                     if(args[0].equalsIgnoreCase("spawn")) {
 
                         if(assertEntityTypeDoesNotExist(args[1], user))
@@ -152,10 +156,10 @@ public class ASMCommand implements CommandExecutor {
         BlockIterator iterator = new BlockIterator(player, Variables.spawningDistance);
         Block lastBlock = iterator.next();
         while (iterator.hasNext()) {
+
             lastBlock = iterator.next();
-            if (lastBlock.getType() == Material.AIR) {
+            if (lastBlock.getType() == Material.AIR)
                 continue;
-            }
             break;
         }
         return lastBlock;
@@ -262,9 +266,8 @@ public class ASMCommand implements CommandExecutor {
     private void prepareAndStartSpawnTask(int amount, String entityName, User user, Location location) {
 
         List<SpawnTaskData> spawnTaskDataList = new ArrayList<>();
-        for(int i = 0; i < amount; i++) {
+        for(int i = 0; i < amount; i++)
             spawnTaskDataList.add(new SpawnTaskData(entityName, location));
-        }
 
         SpawnTask spawnTask = new SpawnTask(spawnTaskDataList, user);
         spawnTask.start();

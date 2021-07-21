@@ -14,8 +14,8 @@ public class SpawnTask {
 
     private final List<SpawnTaskData> spawnTaskDataList;
     private final String entityTypeName;
-    private final User user;
     private final int amount;
+    private final User user;
 
     private int taskId;
 
@@ -29,9 +29,9 @@ public class SpawnTask {
 
     public void start() {
 
+        final double calc = (amount*1.0)/100*Variables.spawnPerTick;
         taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(AsyncSpawnMob.instance, () -> {
 
-            double calc = (amount*1.0)/100*Variables.spawnPerTick;
             for(int i = 0; i < (calc <= 1 ? 1 : Math.round(calc)); i++) {
 
                 if(spawnTaskDataList.isEmpty()) {

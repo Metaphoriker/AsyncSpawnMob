@@ -21,11 +21,8 @@ public class UpdateCheckerTimer implements Runnable {
 
             Bukkit.getScheduler().runTask(AsyncSpawnMob.instance, () -> {
 
-                for(Player player : Bukkit.getOnlinePlayers()) {
-                    if(isPermitted(player)) {
-                        player.sendMessage(ChatUtil.formatMessage("§7An update is available."));
-                    }
-                }
+                for(Player player : Bukkit.getOnlinePlayers())
+                    if(isPermitted(player)) player.sendMessage(ChatUtil.formatMessage("§7An update is available."));
             });
         }
     }
