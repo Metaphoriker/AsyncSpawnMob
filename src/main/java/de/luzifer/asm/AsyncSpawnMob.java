@@ -25,7 +25,7 @@ public final class AsyncSpawnMob extends JavaPlugin {
 
         Variables.initialize();
 
-        Bukkit.getScheduler().runTaskTimerAsynchronously(this, new UpdateCheckerTimer(new UpdateChecker(this)), 0, 20*60*3);
+        Bukkit.getScheduler().runTaskTimerAsynchronously(this, new UpdateCheckerTimer(new UpdateChecker(this)), 0, 20*60*10);
     }
 
     @Override
