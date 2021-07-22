@@ -1,6 +1,7 @@
 name: AsyncSpawnMob
 version: ${project.version}
 main: de.luzifer.asm.AsyncSpawnMob
+api-version: 1.13
 
 commands:
   asyncspawnmob:
