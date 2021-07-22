@@ -9,6 +9,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 public class SpawnTask {
 
@@ -17,6 +18,7 @@ public class SpawnTask {
     private final int amount;
     private final User user;
 
+    private Consumer<User> callback;
     private int taskId;
 
     public SpawnTask(List<SpawnTaskData> spawnTaskDataList, User user) {
@@ -37,7 +39,7 @@ public class SpawnTask {
                 if(spawnTaskDataList.isEmpty()) {
 
                     Bukkit.getScheduler().cancelTask(taskId);
-                    removeTaskFromTaskOwner();
+                    finishTask();
                     break;
                 }
 
@@ -48,11 +50,25 @@ public class SpawnTask {
         addTaskToTaskOwner();
     }
 
+    public void whenDone(Consumer<User> consumer) {
+        this.callback = consumer;
+    }
+
+    public boolean isDone() {
+        return !Bukkit.getScheduler().isCurrentlyRunning(taskId);
+    }
+
     private void spawnEntityAndRemoveFromList() {
 
         SpawnTaskData spawnTaskData = spawnTaskDataList.get(0);
         spawnEntity(spawnTaskData.getEntityTypeName(), user, spawnTaskData.getSpawnLocation());
         spawnTaskDataList.remove(0);
+    }
+
+    private void finishTask() {
+
+        callback.accept(user);
+        removeTaskFromTaskOwner();
     }
 
     private void removeTaskFromTaskOwner() {
