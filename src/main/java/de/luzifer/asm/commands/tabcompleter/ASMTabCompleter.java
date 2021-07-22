@@ -21,24 +21,19 @@ public class ASMTabCompleter implements TabCompleter {
         switch (args.length) {
 
             case 1:
-
                 StringUtil.copyPartialMatches(args[0], Arrays.asList(ARGS), complete);
                 Collections.sort(complete);
                 break;
             case 2:
-
                 switch(args[0]) {
 
                     case "moblist":
-
                         StringUtil.copyPartialMatches(args[1], Collections.singletonList("<page>"), complete);
                         break;
                     case "stop":
-
                         StringUtil.copyPartialMatches(args[1], Collections.singletonList("<id>"), complete);
                         break;
                     case "spawn":
-
                         List<String> mobs = new ArrayList<>();
 
                         double version = getBukkitVersion();
@@ -51,7 +46,6 @@ public class ASMTabCompleter implements TabCompleter {
                 }
                 break;
             case 3:
-
                 if(args[0].equalsIgnoreCase("spawn"))
                     StringUtil.copyPartialMatches(args[2], Collections.singletonList("<amount>"), complete);
                 break;

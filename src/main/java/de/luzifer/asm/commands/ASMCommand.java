@@ -47,7 +47,6 @@ public class ASMCommand implements CommandExecutor {
             switch (args.length) {
 
                 case 1:
-
                     if(args[0].equalsIgnoreCase("moblist")) {
 
                         sendMobList(user, 0);
@@ -61,7 +60,6 @@ public class ASMCommand implements CommandExecutor {
                     sendHelpList = true;
                     break;
                 case 2:
-
                     if(args[0].equalsIgnoreCase("stop")) {
 
                         int taskId;
@@ -102,7 +100,6 @@ public class ASMCommand implements CommandExecutor {
                     sendHelpList = true;
                     break;
                 case 3:
-
                     if(args[0].equalsIgnoreCase("spawn")) {
 
                         if(assertEntityTypeDoesNotExist(args[1], user))
