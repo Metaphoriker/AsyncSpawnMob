@@ -67,7 +67,7 @@ public class SpawnTask {
 
     private void finishTask() {
 
-        callback.accept(user);
+        if(callback != null) callback.accept(user);
         removeTaskFromTaskOwner();
     }
 
