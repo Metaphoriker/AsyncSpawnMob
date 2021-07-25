@@ -8,7 +8,6 @@ import de.luzifer.asm.utils.ChatUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 public class SpawnTask {
@@ -32,21 +31,27 @@ public class SpawnTask {
     public void start() {
 
         final double calc = (amount*1.0)/100*Variables.spawnPerTick;
-        AtomicInteger index = new AtomicInteger();
 
-        taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(AsyncSpawnMob.instance, () -> {
+        taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(AsyncSpawnMob.instance, new Runnable() {
 
-            for(int i = 0; i < (calc <= 1 ? 1 : Math.round(calc)); i++) {
+            private int index = 0;
 
-                if(index.get() >= amount) {
+            @Override
+            public void run() {
 
-                    Bukkit.getScheduler().cancelTask(taskId);
-                    finishTask();
-                    break;
+                for(int i = 0; i < (calc <= 1 ? 1 : Math.round(calc)); i++) {
+
+                    if(index >= amount) {
+
+                        Bukkit.getScheduler().cancelTask(taskId);
+                        finishTask();
+                        break;
+                    }
+
+                    spawnEntity(spawnTaskData.getEntityTypeName(), user, spawnTaskData.getSpawnLocation());
+                    index++;
                 }
 
-                spawnEntity(spawnTaskData.getEntityTypeName(), user, spawnTaskData.getSpawnLocation());
-                index.getAndIncrement();
             }
         }, 0, Variables.spawningDelay);
 
