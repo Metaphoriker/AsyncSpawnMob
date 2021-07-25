@@ -262,11 +262,7 @@ public class ASMCommand implements CommandExecutor {
 
     private void prepareAndStartSpawnTask(int amount, String entityName, User user, Location location) {
 
-        List<SpawnTaskData> spawnTaskDataList = new ArrayList<>();
-        for(int i = 0; i < amount; i++)
-            spawnTaskDataList.add(new SpawnTaskData(entityName, location));
-
-        SpawnTask spawnTask = new SpawnTask(spawnTaskDataList, user);
+        SpawnTask spawnTask = new SpawnTask(new SpawnTaskData(entityName, amount, location), user);
         spawnTask.start();
     }
 

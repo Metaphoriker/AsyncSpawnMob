@@ -8,12 +8,12 @@ import de.luzifer.asm.utils.ChatUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
-import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 public class SpawnTask {
 
-    private final List<SpawnTaskData> spawnTaskDataList;
+    private final SpawnTaskData spawnTaskData;
     private final String entityTypeName;
     private final int amount;
     private final User user;
@@ -21,29 +21,32 @@ public class SpawnTask {
     private Consumer<User> callback;
     private int taskId;
 
-    public SpawnTask(List<SpawnTaskData> spawnTaskDataList, User user) {
+    public SpawnTask(SpawnTaskData spawnTaskData, User user) {
 
-        this.spawnTaskDataList = spawnTaskDataList;
-        this.entityTypeName = spawnTaskDataList.get(0).getEntityTypeName();
-        this.amount = spawnTaskDataList.size();
+        this.spawnTaskData = spawnTaskData;
+        this.entityTypeName = spawnTaskData.getEntityTypeName();
+        this.amount = spawnTaskData.getAmount();
         this.user = user;
     }
 
     public void start() {
 
         final double calc = (amount*1.0)/100*Variables.spawnPerTick;
+        AtomicInteger index = new AtomicInteger();
+
         taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(AsyncSpawnMob.instance, () -> {
 
             for(int i = 0; i < (calc <= 1 ? 1 : Math.round(calc)); i++) {
 
-                if(spawnTaskDataList.isEmpty()) {
+                if(index.get() >= amount) {
 
                     Bukkit.getScheduler().cancelTask(taskId);
                     finishTask();
                     break;
                 }
 
-                spawnEntityAndRemoveFromList();
+                spawnEntity(spawnTaskData.getEntityTypeName(), user, spawnTaskData.getSpawnLocation());
+                index.getAndIncrement();
             }
         }, 0, Variables.spawningDelay);
 
@@ -56,13 +59,6 @@ public class SpawnTask {
 
     public boolean isDone() {
         return !Bukkit.getScheduler().isCurrentlyRunning(taskId);
-    }
-
-    private void spawnEntityAndRemoveFromList() {
-
-        SpawnTaskData spawnTaskData = spawnTaskDataList.get(0);
-        spawnEntity(spawnTaskData.getEntityTypeName(), user, spawnTaskData.getSpawnLocation());
-        spawnTaskDataList.remove(0);
     }
 
     private void finishTask() {
