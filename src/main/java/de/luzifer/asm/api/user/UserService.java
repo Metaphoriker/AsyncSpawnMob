@@ -1,12 +1,10 @@
 package de.luzifer.asm.api.user;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public interface UserService {
 
-    List<User> users = new ArrayList<>();
+    Set<User> users = new HashSet<>();
 
     static User getOrCreateUser(UUID uuid) {
 
