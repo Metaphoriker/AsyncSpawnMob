@@ -2,6 +2,9 @@ package de.luzifer.asm.api.mob;
 
 import org.bukkit.entity.EntityType;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public enum Mob {
 
     ARMOR_STAND("1.8", "ARMOR_STAND"),
@@ -121,17 +124,20 @@ public enum Mob {
     GLOW_SQUID("1.17", "GLOW_SQUID"),
     GOAT("1.17", "GOAT");
 
+    private static final Map<String, Mob> MOB_BY_NAME = new HashMap<>();
+    
+    static {
+        for(Mob mob : values())
+            MOB_BY_NAME.put(mob.getIdentifier(), mob);
+    }
+    
+    public static Mob getMob(String name) {
+        return MOB_BY_NAME.get(name);
+    }
+    
     private final String sinceVersion;
     private final String removedSinceVersion;
     private final String identifier;
-
-    public static Mob fromName(String name) {
-
-        for(Mob mob : Mob.values())
-            if(mob.doesEntityTypeExist(mob.identifier) && mob.identifier.equalsIgnoreCase(name)) return mob;
-
-        throw new IllegalArgumentException("There is no Mob with the specified name: " + name);
-    }
 
     Mob(String existsSinceVersion, String identifier) {
         this(existsSinceVersion, "NOT", identifier);
@@ -157,20 +163,18 @@ public enum Mob {
     }
 
     public EntityType convertToEntityType() {
-
-        if(doesEntityTypeExist(identifier)) return EntityType.valueOf(identifier);
+        
+        if(doesEntityTypeExist(identifier))
+            return EntityType.valueOf(identifier);
+        
         throw new IllegalArgumentException("There is no EntityType with the specified name(s): " + identifier);
     }
 
     private boolean doesEntityTypeExist(String name) {
-
-        if(name == null) return false;
-
-        try {
-            EntityType.valueOf(name);
-        } catch (Exception e) {
+        
+        if(name == null)
             return false;
-        }
-        return true;
+        
+        return EntityType.fromName(name) != null;
     }
 }

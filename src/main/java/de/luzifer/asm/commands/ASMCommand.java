@@ -226,7 +226,7 @@ public class ASMCommand implements CommandExecutor {
 
     private void spawnEntity(String entityTypeName, User user, Location spawnAt) {
 
-        Mob mob = Mob.fromName(entityTypeName.toUpperCase());
+        Mob mob = Mob.getMob(entityTypeName.toUpperCase());
         user.asPlayer().getWorld().spawnEntity(spawnAt.clone().add(0.5, 1, 0.5), mob.convertToEntityType());
     }
 
@@ -272,7 +272,7 @@ public class ASMCommand implements CommandExecutor {
             throw new IllegalArgumentException();
 
         try {
-            Mob.fromName(entityTypeName.toUpperCase(Locale.ENGLISH));
+            Mob.getMob(entityTypeName.toUpperCase(Locale.ENGLISH));
         } catch (Exception e) {
 
             user.asPlayer().sendMessage(ChatUtil.formatMessage("§7Couldn't find a Mob named: §c" + entityTypeName));
