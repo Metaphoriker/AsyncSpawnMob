@@ -5,7 +5,7 @@ import de.luzifer.asm.api.mob.task.SpawnTask;
 import de.luzifer.asm.api.mob.task.SpawnTaskData;
 import de.luzifer.asm.api.mob.task.SpawnTaskId;
 import de.luzifer.asm.api.user.User;
-import de.luzifer.asm.api.user.UserService;
+import de.luzifer.asm.api.user.UserRepository;
 import de.luzifer.asm.config.Variables;
 import de.luzifer.asm.utils.ChatUtil;
 import org.bukkit.Bukkit;
@@ -22,6 +22,12 @@ import java.util.*;
 
 public class ASMCommand implements CommandExecutor {
 
+    private final UserRepository userRepository;
+    
+    public ASMCommand(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+    
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
@@ -32,7 +38,7 @@ public class ASMCommand implements CommandExecutor {
         }
 
         Player player = (Player) sender;
-        User user = UserService.getOrCreateUser(player.getUniqueId());
+        User user = userRepository.getOrCreateUser(player.getUniqueId());
 
         if(command.getName().equalsIgnoreCase("asyncspawnmob")) {
 
@@ -157,8 +163,10 @@ public class ASMCommand implements CommandExecutor {
             lastBlock = iterator.next();
             if (lastBlock.getType() == Material.AIR)
                 continue;
+            
             break;
         }
+        
         return lastBlock;
     }
 

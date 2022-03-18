@@ -1,5 +1,6 @@
 package de.luzifer.asm;
 
+import de.luzifer.asm.api.user.UserRepository;
 import de.luzifer.asm.commands.ASMCommand;
 import de.luzifer.asm.commands.tabcompleter.ASMTabCompleter;
 import de.luzifer.asm.config.Variables;
@@ -12,6 +13,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 public final class AsyncSpawnMob extends JavaPlugin {
 
     public static final String PREFIX = "§8[§eAsyncSpawnMob§8] ";
+    private static final UserRepository USER_REPOSITORY = new UserRepository();
+    
     public static AsyncSpawnMob instance;
 
     @Override
@@ -41,11 +44,11 @@ public final class AsyncSpawnMob extends JavaPlugin {
 
     private void loadCommands() {
 
-        getCommand("asyncspawnmob").setExecutor(new ASMCommand());
+        getCommand("asyncspawnmob").setExecutor(new ASMCommand(USER_REPOSITORY));
         getCommand("asyncspawnmob").setTabCompleter(new ASMTabCompleter());
     }
 
     private void loadListener() {
-        Bukkit.getPluginManager().registerEvents(new PlayerJoinQuitListener(), this);
+        Bukkit.getPluginManager().registerEvents(new PlayerJoinQuitListener(USER_REPOSITORY), this);
     }
 }
